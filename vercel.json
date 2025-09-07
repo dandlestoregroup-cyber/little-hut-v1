@@ -1,0 +1,17 @@
+{
+  "crons": [
+    {
+      "path": "/api/ai/optimize-listing",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/calendar/sync",
+      "schedule": "*/30 * * * *"
+    }
+  ],
+  "functions": {
+    "app/api/*/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
