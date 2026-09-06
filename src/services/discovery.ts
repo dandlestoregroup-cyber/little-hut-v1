@@ -4,6 +4,11 @@ export interface GuestMomentProperty {
   propertyId: string;
   propertySlug: string;
   propertyName: string;
+  locationLabel?: string;
+  shortDescription?: string;
+  maxGuests?: number;
+  bedrooms?: number;
+  bathrooms?: number;
   momentId: string;
   momentSlug: string;
   momentName: string;
@@ -15,6 +20,11 @@ interface GuestMomentPropertyRow {
   property_id: string;
   property_slug: string;
   property_name: string;
+  location_label: string | null;
+  short_description: string | null;
+  max_guests: number | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
   moment_id: string;
   moment_slug: string;
   moment_name: string;
@@ -28,7 +38,7 @@ export async function listGuestMomentProperties(): Promise<GuestMomentProperty[]
 
   const { data, error } = await supabase
     .from("guest_moment_properties")
-    .select("property_id,property_slug,property_name,moment_id,moment_slug,moment_name,moment_promise,hero_media_path")
+    .select("property_id,property_slug,property_name,location_label,short_description,max_guests,bedrooms,bathrooms,moment_id,moment_slug,moment_name,moment_promise,hero_media_path")
     .order("moment_name");
 
   if (error) throw new Error(`guest_discovery_failed:${error.code}`);
@@ -50,6 +60,11 @@ export async function listGuestMomentProperties(): Promise<GuestMomentProperty[]
         propertyId: row.property_id,
         propertySlug: row.property_slug,
         propertyName: row.property_name,
+        locationLabel: row.location_label ?? undefined,
+        shortDescription: row.short_description ?? undefined,
+        maxGuests: row.max_guests ?? undefined,
+        bedrooms: row.bedrooms ?? undefined,
+        bathrooms: row.bathrooms ?? undefined,
         momentId: row.moment_id,
         momentSlug: row.moment_slug,
         momentName: row.moment_name,
