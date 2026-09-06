@@ -42,6 +42,7 @@ function candidate(): CandidateCase {
           method: "site_visit",
         },
         supportingMediaAssetIds: ["media-1"],
+        submittedBy: "assessor-1",
         reviewedBy: "assessor-2",
         reviewedAt: "2026-09-01T10:00:00.000Z",
       },
@@ -82,6 +83,7 @@ function candidate(): CandidateCase {
       propertyId: "property-1",
       status: "ready",
       checkedAt: "2026-09-06T10:00:00.000Z",
+      expiresAt: "2026-09-06T14:00:00.000Z",
       blockers: [],
     },
     risks: [],
@@ -107,6 +109,14 @@ describe("Mastermind", () => {
     const decision = decideCandidate(intent, input, now);
     expect(decision.action).toBe("block");
     expect(decision.reasons).toContain("availability_stale");
+  });
+
+  it("blocks stale operational readiness", () => {
+    const input = candidate();
+    input.readiness!.expiresAt = "2026-09-06T11:59:59.000Z";
+    const decision = decideCandidate(intent, input, now);
+    expect(decision.action).toBe("block");
+    expect(decision.reasons).toContain("operational_readiness_stale");
   });
 
   it("escalates unresolved medium risk after all truth gates pass", () => {

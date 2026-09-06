@@ -49,6 +49,7 @@ export interface PropertyMomentEvidence {
   claim: string;
   provenance: Provenance;
   supportingMediaAssetIds: UUID[];
+  submittedBy?: UUID;
   reviewedBy?: UUID;
   reviewedAt?: string;
   expiresAt?: string;
@@ -80,6 +81,7 @@ export interface OperationalReadiness {
   propertyId: UUID;
   status: "ready" | "blocked" | "unknown";
   checkedAt: string;
+  expiresAt: string;
   blockers: string[];
 }
 

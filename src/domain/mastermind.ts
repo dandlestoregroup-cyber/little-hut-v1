@@ -1,7 +1,7 @@
 import { qualifyMomentEvidence } from "./evidence";
 import type { CandidateCase, GuestIntent, MastermindDecision } from "./types";
 
-export const MASTERMIND_ENGINE_VERSION = "mastermind-0.1.0";
+export const MASTERMIND_ENGINE_VERSION = "mastermind-0.2.0";
 
 function coversRequestedStay(
   startDate: string,
@@ -51,8 +51,12 @@ export function decideCandidate(
     if (!freshUntil(rate.expiresAt, now)) reasons.push("rate_stale");
   }
 
-  if (!candidate.readiness || candidate.readiness.status !== "ready") {
-    reasons.push("operational_readiness_not_ready");
+  const readiness = candidate.readiness;
+  if (!readiness) {
+    reasons.push("operational_readiness_missing");
+  } else {
+    if (readiness.status !== "ready") reasons.push("operational_readiness_not_ready");
+    if (!freshUntil(readiness.expiresAt, now)) reasons.push("operational_readiness_stale");
   }
 
   if (candidate.risks.some((risk) => risk.severity === "high" && !risk.resolved)) {
